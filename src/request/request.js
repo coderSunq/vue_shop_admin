@@ -5,4 +5,9 @@ const request = axios.create({
     timeout:5000
 })
 
+request.interceptors.request.use(config=>{
+    config.headers.Authorization = window.sessionStorage.getItem('token')
+    return config
+})
+
 export default request
