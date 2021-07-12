@@ -67,6 +67,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="setRole(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -133,6 +134,37 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogClosed">取 消</el-button>
           <el-button type="primary" @click="editUserInfo(editForm.id)"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="分配角色"
+        :visible.sync="setRoleDialogVisible"
+        width="50%"
+        @close="roleDialogClosed"
+      >
+        <div>
+          <p>当前的用户：{{ userinfo.username }}</p>
+          <p>当前的角色：{{ userinfo.role_name }}</p>
+          <p>
+            <span>分配新角色：</span>
+            <el-select 
+            v-model="selectedRoleId"
+            placeholder="请选择">
+              <el-option
+                v-for="item in rolelist"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveRoleInfo"
             >确 定</el-button
           >
         </span>
@@ -215,6 +247,10 @@ export default {
           { validator: checkMobile, trigger: "blur" },
         ],
       },
+      setRoleDialogVisible: false,
+      userinfo: {},
+      rolelist: [],
+      selectedRoleId:''
     };
   },
   created() {
@@ -297,22 +333,54 @@ export default {
       });
     },
     async removeUserMessageBox(id) {
-      const confirmResult = await this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).catch(err => err
-      )
-      if(confirmResult !== 'confirm'){
-        return this.$message.info('取消了删除')
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该用户, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch((err) => err);
+      if (confirmResult !== "confirm") {
+        return this.$message.info("取消了删除");
       }
-      const {data:res} = await request.delete('users/' + id)
+      const { data: res } = await request.delete("users/" + id);
+      if (res.meta.status !== 200) {
+        return this.$message.error("删除失败");
+      }
+      this.$message.success("删除成功");
+      this.getUserList();
+    },
+    async setRole(userinfo) {
+      this.userinfo = userinfo;
+      const {data:res} = await request.get('roles')
       if(res.meta.status !== 200) {
-        return this.$message.error('删除失败')
+        return this.$message.error('获取角色列表失败')
       }
-      this.$message.success('删除成功')
+      this.$message.success('获取角色列表成功')
+      this.rolelist = res.data
+      this.setRoleDialogVisible = true;
+    },
+    async saveRoleInfo(){
+      if(this.userinfo.id === 500){
+        this.setRoleDialogVisible = false
+        return this.$message.error('无法操作超级管理员账户')
+      }
+      if(!this.selectedRoleId){
+        return this.$message.error('请选择要分配的角色！')
+      }
+      const {data:res} = await request.put(`users/${this.userinfo.id}/role`,{rid:this.selectedRoleId})
+      if(res.meta.status !== 200){
+        return this.$message.error('分配角色失败！')
+      }
+      this.$message.success('分配角色成功！')
+      this.setRoleDialogVisible = false
       this.getUserList()
     },
+    roleDialogClosed(){
+      this.selectedRoleId = ""
+    }
   },
 };
 </script>

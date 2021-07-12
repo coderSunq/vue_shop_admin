@@ -63,7 +63,6 @@ export default {
     };
   },
   created(){
-    console.log(getMenus().then())
     getMenus().then(res=>{
       if(res.data.meta.status !==200) return this.$message.error(res.data.meta.msg)
       this.menulist = res.data.data
