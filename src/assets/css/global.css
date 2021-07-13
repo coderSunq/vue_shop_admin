@@ -10,3 +10,20 @@ html, body, #app {
 .el-table {
     margin-top: 15px;
 }
+.el-scrollbar__wrap{
+    height: 200px;
+}
+.el-cascader-menu .el-radio {
+    display: table;
+    vertical-align: middle;
+    width: 90%;
+    height: 100%;
+    position: absolute;
+    box-sizing: border-box;
+    margin-left:-20px;
+    padding-left:10px;
+  }
+  .el-cascader-menu .el-radio .el-radio__input {
+    display: table-cell;
+    vertical-align: middle;
+  }

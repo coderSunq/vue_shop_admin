@@ -4,7 +4,9 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import less from 'less'
+import ZkTable from 'vue-table-with-tree-grid'
 Vue.use(less)
+Vue.component('tree-table',ZkTable)
 // 导入全局样式
 import '@/assets/css/global.css'
 Vue.config.productionTip = false
