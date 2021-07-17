@@ -248,18 +248,18 @@ export default {
       this.catelist = res.data;
     },
     handleClick() {
-      if(this.manyTableDate === []||this.onlyTableDate ===[]){
-        console.log(123)
-        return
+      if (this.manyTableDate === [] || this.onlyTableDate === []) {
+        console.log(123);
+        return;
       }
       this.getTableDate();
     },
     async getTableDate() {
-      if(this.cateSelectedKeys.length !== 3){
-        this.cateSelectedKeys = []
-        this.manyTableDate = []
-        this.onlyTableDate = []
-        return
+      if (this.cateSelectedKeys.length !== 3) {
+        this.cateSelectedKeys = [];
+        this.manyTableDate = [];
+        this.onlyTableDate = [];
+        return;
       }
       const { data: res } = await request.get(
         `categories/${this.cateId}/attributes`,
@@ -411,11 +411,11 @@ export default {
       }
       return null;
     },
-    btnDisabled(){
-      if(this.cateSelectedKeys.length === 3){
-        return false
+    btnDisabled() {
+      if (this.cateSelectedKeys.length === 3) {
+        return false;
       }
-      return true
+      return true;
     },
     addDialogTitleText() {
       if (this.activeName === "many") {
@@ -423,7 +423,7 @@ export default {
       }
       return "静态属性";
     },
-  }
+  },
 };
 </script>
 

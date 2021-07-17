@@ -27,3 +27,6 @@ html, body, #app {
     display: table-cell;
     vertical-align: middle;
   }
+  .ql-editor{
+      min-height: 300px;
+  }
